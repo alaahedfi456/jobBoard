@@ -14,6 +14,20 @@ before(async () => {
 
 after(() => server.close());
 
+test('GET /health returns status UP', async () => {
+  const res = await fetch(`${baseUrl}/health`);
+  assert.equal(res.status, 200);
+  assert.deepEqual(await res.json(), { status: 'UP' });
+});
+
+test('GET /info returns service name and version from package.json', async () => {
+  const res = await fetch(`${baseUrl}/info`);
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.equal(data.name, 'meeting');
+  assert.equal(data.version, '1.0.0');
+});
+
 test('GET /api/meetings/hello returns the greeting', async () => {
   const res = await fetch(`${baseUrl}/api/meetings/hello`);
   assert.equal(res.status, 200);

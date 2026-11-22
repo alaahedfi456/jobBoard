@@ -6,6 +6,20 @@ from app.main import app
 client = TestClient(app)
 
 
+def test_health_returns_up():
+    res = client.get("/health")
+    assert res.status_code == 200
+    assert res.json() == {"status": "UP"}
+
+
+def test_info_returns_service_info():
+    res = client.get("/info")
+    assert res.status_code == 200
+    data = res.json()
+    assert data["name"] == "notification"
+    assert data["version"] == "1.0.0"
+
+
 def test_hello_returns_greeting():
     res = client.get("/api/notifications/hello")
     assert res.status_code == 200

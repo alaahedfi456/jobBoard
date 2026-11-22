@@ -18,17 +18,26 @@ PORT = int(os.getenv("PORT", "8084"))
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup: register with Eureka
-    await eureka_client.init_async(
-        eureka_server="http://localhost:8761/eureka",
-        app_name="NOTIFICATION",
-        instance_port=PORT,
-        instance_host="localhost",
-    )
-    print(f"Registered with Eureka as NOTIFICATION on port {PORT}")
+    try:
+        await eureka_client.init_async(
+            eureka_server="http://localhost:8761/eureka",
+            app_name="NOTIFICATION",
+            instance_port=PORT,
+            instance_host="localhost",
+            health_check_url=f"http://localhost:{PORT}/health",
+            status_page_url=f"http://localhost:{PORT}/info",
+            home_page_url=f"http://localhost:{PORT}/",
+        )
+        print(f"Registered with Eureka as NOTIFICATION on port {PORT}")
+    except Exception as e:
+        print(f"Eureka registration skipped or failed: {e}")
     yield
     # Shutdown: deregister from Eureka
-    await eureka_client.stop_async()
-    print("Deregistered from Eureka")
+    try:
+        await eureka_client.stop_async()
+        print("Deregistered from Eureka")
+    except Exception:
+        pass
 
 
 app = FastAPI(
@@ -48,6 +57,20 @@ app = FastAPI(
 )
 
 app.include_router(notification.router)
+
+
+@app.get("/health", summary="Health check endpoint")
+def health():
+    return {"status": "UP"}
+
+
+@app.get("/info", summary="Service info endpoint")
+def info():
+    return {
+        "name": "notification",
+        "version": "1.0.0",
+        "description": "Notification microservice (Python / FastAPI)",
+    }
 
 # TODO (students): if you add other routers, include them here.
 
