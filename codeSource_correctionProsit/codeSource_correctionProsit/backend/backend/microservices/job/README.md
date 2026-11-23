@@ -26,6 +26,20 @@ mvn spring-boot:run
 `spring.jpa.hibernate.ddl-auto=none`: the SQL script owns the schema. Switch to `update` to let Hibernate manage it.
 
 ## Endpoints
+
+### Actuator (atelier santé et observabilité)
+
+- `GET http://localhost:8082/actuator/health` : santé globale, composants Spring et contrôle SQL personnalisé `jobDatabase`.
+- `GET http://localhost:8082/actuator/info` : nom et version du service.
+- `GET http://localhost:8082/actuator/metrics` et `/actuator/metrics/jvm.memory.used` : métriques disponibles et mémoire utilisée.
+- `GET http://localhost:8082/actuator/loggers` : niveaux de logs; `POST /actuator/loggers/com.awd.job` avec `{"configuredLevel":"DEBUG"}` change le niveau sans redémarrage. Remettre `INFO` après la démonstration.
+
+Les mêmes endpoints sont publiés par Candidat sur le port 8081. Couper MySQL après le démarrage de Job permet d'observer `DOWN` sur son contrôle de base et dans Eureka (après propagation du statut). Candidature, déjà équipé, expose aussi health, info, metrics et loggers sur le port 8085.
+
+Ordre conseillé : MySQL, Eureka, puis les microservices Spring. Meeting et Notification exposent `/health` et `/info` et publient ces URL lors de leur enregistrement Eureka.
+
+## Endpoints métier
+
 | Method | Path | Description |
 |---|---|---|
 | GET | /api/jobs?available=&categoryId= | List jobs (filters optional, newest first) |

@@ -30,7 +30,7 @@ if not defined JAVA_BIN (
     set "JAVA_BIN=java"
 )
 
-set "JAR_PATH=%~dp0codeSource_correctionProsit\backend\backend\microservices\eureka-server\target\eureka-server-0.0.1-SNAPSHOT.jar"
+set "JAR_PATH=%~dp0codeSource_correctionProsit\backend\backend\eureka-server\target\eureka-server-0.0.1-SNAPSHOT.jar"
 
 if not exist "%JAR_PATH%" (
     echo [ERREUR] Le fichier JAR introuvable: %JAR_PATH%

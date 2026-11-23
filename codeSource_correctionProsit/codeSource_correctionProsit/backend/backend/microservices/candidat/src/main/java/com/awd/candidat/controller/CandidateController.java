@@ -17,13 +17,17 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/mic1/candidates")
+@RequestMapping("/candidates")
 @Tag(name = "Candidates", description = "Manage candidates and link them to an address")
 public class CandidateController {
 
     private final CandidateService candidateService;
+
+    @org.springframework.beans.factory.annotation.Value("${server.port}")
+    private String instancePort;
 
     public CandidateController(CandidateService candidateService) {
         this.candidateService = candidateService;
@@ -34,6 +38,11 @@ public class CandidateController {
     @ApiResponse(responseCode = "200", description = "List of candidates")
     public List<CandidateResponse> findAll() {
         return candidateService.findAll();
+    }
+
+    @GetMapping("/instance")
+    public Map<String, String> instance() {
+        return Map.of("service", "CANDIDAT", "port", instancePort);
     }
 
     @GetMapping("/{id}")
