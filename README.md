@@ -6,10 +6,10 @@ Projet de microservices Spring Boot avec serveur Eureka, API Gateway et services
 
 This project is developed by the following team members:
 
-- **Douaa Ben Rejab**
-- **Maryem Bdira Filali**
-- **Manel Hosni**
-- **Mahdi Ben Fattoum**
+- **Mohamed alaa eddine hedfi**
+- **elyes dalhoumi**
+- **adel haj salem**
+- **louai sadaoui **
 
 ## Atelier : santé et routage dynamique
 
